@@ -1,0 +1,12 @@
+flask
+textblob
+scikit-learn
+numpy
+opencv-python
+SpeechRecognition
+pydub
+python-docx
+PyPDF2
+pillow
+pytesseract
+reportlab

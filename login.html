@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>InterviewAI — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#03050a;
+  --card:#080d18;
+  --border:#0f1e35;
+  --accent:#00d4ff;
+  --accent2:#7c3aed;
+  --accent3:#00ff88;
+  --text:#f0f4ff;
+  --text2:#7a90b0;
+  --font-h:'Bebas Neue',sans-serif;
+  --font-b:'Outfit',sans-serif;
+}
+
+html,body{height:100%;overflow:hidden}
+
+body{
+  background:var(--bg);
+  font-family:var(--font-b);
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+
+/* ── Animated grid background ── */
+.bg-grid{
+  position:fixed;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(0,212,255,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,.03) 1px, transparent 1px);
+  background-size:60px 60px;
+  animation:gridMove 20s linear infinite;
+}
+@keyframes gridMove{from{background-position:0 0}to{background-position:60px 60px}}
+
+/* ── Floating orbs ── */
+.orb{
+  position:fixed;border-radius:50%;filter:blur(80px);
+  animation:orbFloat 8s ease-in-out infinite;pointer-events:none;
+}
+.orb1{width:400px;height:400px;background:rgba(0,212,255,.08);top:-100px;left:-100px;animation-delay:0s}
+.orb2{width:350px;height:350px;background:rgba(124,58,237,.1);bottom:-80px;right:-80px;animation-delay:-3s}
+.orb3{width:250px;height:250px;background:rgba(0,255,136,.06);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-6s}
+@keyframes orbFloat{
+  0%,100%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-30px) scale(1.1)}
+}
+.orb3{animation:orb3Float 10s ease-in-out infinite}
+@keyframes orb3Float{
+  0%,100%{transform:translate(-50%,-50%) scale(1)}
+  50%{transform:translate(-48%,-52%) scale(1.15)}
+}
+
+/* ── Scan line effect ── */
+body::after{
+  content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(
+    0deg,transparent,transparent 2px,rgba(0,212,255,.015) 2px,rgba(0,212,255,.015) 4px
+  );
+}
+
+/* ── Main wrapper ── */
+.wrapper{
+  position:relative;z-index:10;
+  display:grid;grid-template-columns:1fr 1fr;
+  width:min(960px,95vw);height:min(580px,92vh);
+  border-radius:24px;overflow:hidden;
+  box-shadow:0 0 0 1px var(--border),0 40px 120px rgba(0,0,0,.8),0 0 80px rgba(0,212,255,.05);
+}
+
+/* ── Left panel ── */
+.left{
+  background:linear-gradient(135deg,#030810 0%,#060f1e 60%,#08152a 100%);
+  padding:52px 48px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  border-right:1px solid var(--border);position:relative;overflow:hidden;
+}
+.left::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 50%,rgba(0,212,255,.07) 0%,transparent 65%);
+}
+
+.brand{position:relative;z-index:1}
+.brand-icon{
+  width:52px;height:52px;border-radius:14px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;margin-bottom:20px;
+  box-shadow:0 8px 24px rgba(0,212,255,.3);
+}
+.brand-name{
+  font-family:var(--font-h);font-size:42px;letter-spacing:2px;
+  background:linear-gradient(135deg,var(--accent),#fff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;line-height:1;
+}
+.brand-sub{font-size:13px;color:var(--text2);margin-top:8px;letter-spacing:.05em}
+
+.features{position:relative;z-index:1}
+.feature-item{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 0;border-bottom:1px solid rgba(255,255,255,.04);
+}
+.feature-item:last-child{border-bottom:none}
+.feat-dot{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+.feat-dot.blue{background:rgba(0,212,255,.12);border:1px solid rgba(0,212,255,.2)}
+.feat-dot.purple{background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.2)}
+.feat-dot.green{background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2)}
+.feat-dot.orange{background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.2)}
+.feat-label{font-size:13px;font-weight:500;color:var(--text)}
+.feat-sub{font-size:11px;color:var(--text2);margin-top:2px}
+
+.left-footer{
+  position:relative;z-index:1;
+  font-size:11px;color:var(--text2);letter-spacing:.03em;
+}
+
+/* ── Right panel ── */
+.right{
+  background:#04080f;
+  padding:52px 48px;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.right::before{
+  content:'';position:absolute;top:-100px;right:-100px;
+  width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,58,237,.08) 0%,transparent 70%);
+}
+
+.login-header{margin-bottom:36px;position:relative;z-index:1}
+.login-title{
+  font-family:var(--font-h);font-size:36px;letter-spacing:1px;
+  color:var(--text);margin-bottom:8px;
+}
+.login-sub{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* ── Tabs ── */
+.auth-tabs{
+  display:flex;gap:4px;background:rgba(255,255,255,.03);
+  border:1px solid var(--border);border-radius:12px;padding:4px;
+  margin-bottom:28px;position:relative;z-index:1;
+}
+.auth-tab{
+  flex:1;padding:9px;border-radius:9px;font-family:var(--font-b);
+  font-size:13px;font-weight:600;cursor:pointer;border:none;
+  background:transparent;color:var(--text2);transition:all .25s;
+}
+.auth-tab.active{
+  background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(124,58,237,.15));
+  color:var(--accent);border:1px solid rgba(0,212,255,.2);
+}
+
+/* ── Form ── */
+.form-group{margin-bottom:18px;position:relative;z-index:1}
+.form-label{
+  display:block;font-size:11px;font-weight:600;
+  color:var(--text2);margin-bottom:8px;letter-spacing:.08em;text-transform:uppercase;
+}
+.form-input{
+  width:100%;background:rgba(255,255,255,.03);
+  border:1px solid var(--border);color:var(--text);
+  border-radius:12px;padding:13px 16px;
+  font-family:var(--font-b);font-size:14px;outline:none;
+  transition:all .25s;
+}
+.form-input:focus{
+  border-color:var(--accent);
+  background:rgba(0,212,255,.04);
+  box-shadow:0 0 0 3px rgba(0,212,255,.08);
+}
+.form-input::placeholder{color:var(--text2);opacity:.5}
+
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* ── Role selector ── */
+.role-select{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  margin-bottom:20px;position:relative;z-index:1;
+}
+.role-btn{
+  padding:11px 14px;border-radius:10px;cursor:pointer;
+  border:1px solid var(--border);background:rgba(255,255,255,.02);
+  font-family:var(--font-b);font-size:12px;font-weight:600;
+  color:var(--text2);transition:all .25s;text-align:center;
+}
+.role-btn:hover{border-color:var(--accent);color:var(--accent)}
+.role-btn.selected{
+  border-color:var(--accent);color:var(--accent);
+  background:rgba(0,212,255,.08);
+}
+
+/* ── Submit button ── */
+.submit-btn{
+  width:100%;padding:14px;border-radius:12px;
+  font-family:var(--font-b);font-size:15px;font-weight:700;
+  cursor:pointer;border:none;position:relative;z-index:1;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;letter-spacing:.03em;
+  transition:all .3s;overflow:hidden;margin-top:4px;
+}
+.submit-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.submit-btn:hover::before{opacity:1}
+.submit-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,212,255,.3)}
+.submit-btn:active{transform:translateY(0)}
+
+/* ── Divider ── */
+.divider{
+  display:flex;align-items:center;gap:12px;
+  margin:20px 0;position:relative;z-index:1;
+}
+.divider::before,.divider::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+.divider span{font-size:11px;color:var(--text2);letter-spacing:.05em}
+
+/* ── Guest button ── */
+.guest-btn{
+  width:100%;padding:12px;border-radius:12px;
+  font-family:var(--font-b);font-size:13px;font-weight:600;
+  cursor:pointer;border:1px solid var(--border);
+  background:transparent;color:var(--text2);
+  transition:all .25s;position:relative;z-index:1;
+}
+.guest-btn:hover{border-color:var(--accent3);color:var(--accent3)}
+
+/* ── Error/Success msg ── */
+.msg{
+  padding:10px 14px;border-radius:10px;font-size:12px;
+  margin-bottom:16px;display:none;position:relative;z-index:1;
+}
+.msg.error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
+.msg.success{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);color:#6ee7b7}
+
+/* ── Loading spinner on button ── */
+.btn-spinner{
+  width:18px;height:18px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin .7s linear infinite;display:none;margin:0 auto;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Particle dots ── */
+.particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+.particle{
+  position:absolute;width:2px;height:2px;border-radius:50%;
+  background:var(--accent);opacity:0;
+  animation:particleFade 4s ease-in-out infinite;
+}
+@keyframes particleFade{
+  0%{opacity:0;transform:translateY(0)}
+  50%{opacity:.6}
+  100%{opacity:0;transform:translateY(-60px)}
+}
+
+@media(max-width:700px){
+  .wrapper{grid-template-columns:1fr;height:auto;overflow-y:auto}
+  .left{display:none}
+  .right{padding:36px 28px}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+<div class="particles" id="particles"></div>
+
+<div class="wrapper">
+  <!-- LEFT PANEL -->
+  <div class="left">
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-name">InterviewAI</div>
+      <div class="brand-sub">PERFORMANCE ANALYZER PLATFORM</div>
+    </div>
+
+    <div class="features">
+      <div class="feature-item">
+        <div class="feat-dot blue">🎙️</div>
+        <div>
+          <div class="feat-label">Audio Interview</div>
+          <div class="feat-sub">Speech-to-text + AI scoring</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feat-dot purple">🧠</div>
+        <div>
+          <div class="feat-label">Aptitude Test</div>
+          <div class="feat-sub">Quantitative & logical reasoning</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feat-dot green">💻</div>
+        <div>
+          <div class="feat-label">Coding Test</div>
+          <div class="feat-sub">Multi-language problem solving</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feat-dot orange">📹</div>
+        <div>
+          <div class="feat-label">Video Interview</div>
+          <div class="feat-sub">Record & review sessions</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="left-footer">© 2026 InterviewAI · All rights reserved</div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right">
+    <div class="login-header">
+      <div class="login-title">Welcome Back</div>
+      <div class="login-sub">Sign in to access your interview dashboard</div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- Message -->
+    <div class="msg" id="auth-msg"></div>
+
+    <!-- LOGIN FORM -->
+    <div id="form-login">
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input class="form-input" id="login-username" type="text" placeholder="Enter your username"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" id="login-password" type="password" placeholder="Enter your password"/>
+      </div>
+      <button class="submit-btn" onclick="doLogin()" id="login-btn">
+        <span id="login-btn-text">Sign In →</span>
+        <div class="btn-spinner" id="login-spinner"></div>
+      </button>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="form-register" style="display:none;">
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input class="form-input" id="reg-firstname" type="text" placeholder="John"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input class="form-input" id="reg-lastname" type="text" placeholder="Doe"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input class="form-input" id="reg-username" type="text" placeholder="Choose a username"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" id="reg-password" type="password" placeholder="Create a password"/>
+      </div>
+      <div style="margin-bottom:18px;">
+        <div class="form-label" style="margin-bottom:10px;">Role</div>
+        <div class="role-select">
+          <div class="role-btn selected" id="role-candidate" onclick="selectRole('candidate')">👤 Candidate</div>
+          <div class="role-btn" id="role-interviewer" onclick="selectRole('interviewer')">🎯 Interviewer</div>
+        </div>
+      </div>
+      <button class="submit-btn" onclick="doRegister()" id="reg-btn">
+        <span id="reg-btn-text">Create Account →</span>
+        <div class="btn-spinner" id="reg-spinner"></div>
+      </button>
+    </div>
+
+    <div class="divider"><span>OR</span></div>
+    <button class="guest-btn" onclick="guestLogin()">Continue as Guest →</button>
+  </div>
+</div>
+
+<script>
+// ── Particles ──────────────────────────────────────
+const container = document.getElementById('particles');
+for (let i = 0; i < 30; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.cssText = `
+    left:${Math.random()*100}%;
+    top:${Math.random()*100}%;
+    animation-delay:${Math.random()*4}s;
+    animation-duration:${3+Math.random()*4}s;
+    opacity:0;
+  `;
+  container.appendChild(p);
+}
+
+// ── Tab switching ──────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('form-login').style.display    = tab==='login'    ? 'block' : 'none';
+  document.getElementById('form-register').style.display = tab==='register' ? 'block' : 'none';
+  document.getElementById('tab-login').className    = 'auth-tab' + (tab==='login'    ? ' active' : '');
+  document.getElementById('tab-register').className = 'auth-tab' + (tab==='register' ? ' active' : '');
+  showMsg('','');
+}
+
+let selectedRole = 'candidate';
+function selectRole(role) {
+  selectedRole = role;
+  document.getElementById('role-candidate').className   = 'role-btn' + (role==='candidate'   ? ' selected' : '');
+  document.getElementById('role-interviewer').className = 'role-btn' + (role==='interviewer' ? ' selected' : '');
+}
+
+function showMsg(text, type) {
+  const el = document.getElementById('auth-msg');
+  el.textContent = text;
+  el.className   = 'msg ' + type;
+  el.style.display = text ? 'block' : 'none';
+}
+
+function setBtnLoading(btnId, spinnerId, textId, loading) {
+  document.getElementById(btnId).disabled             = loading;
+  document.getElementById(spinnerId).style.display    = loading ? 'block' : 'none';
+  document.getElementById(textId).style.display       = loading ? 'none'  : 'block';
+}
+
+// ── Login ──────────────────────────────────────────
+async function doLogin() {
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value.trim();
+  if (!username || !password) { showMsg('Please enter username and password.','error'); return; }
+
+  setBtnLoading('login-btn','login-spinner','login-btn-text', true);
+  try {
+    const res  = await fetch('/api/auth/login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showMsg('Login successful! Redirecting...','success');
+      setTimeout(() => window.location.href = '/', 1000);
+    } else {
+      showMsg(data.error || 'Invalid username or password.','error');
+      setBtnLoading('login-btn','login-spinner','login-btn-text', false);
+    }
+  } catch(e) {
+    showMsg('Server error. Make sure python app.py is running.','error');
+    setBtnLoading('login-btn','login-spinner','login-btn-text', false);
+  }
+}
+
+// ── Register ───────────────────────────────────────
+async function doRegister() {
+  const firstname = document.getElementById('reg-firstname').value.trim();
+  const lastname  = document.getElementById('reg-lastname').value.trim();
+  const username  = document.getElementById('reg-username').value.trim();
+  const password  = document.getElementById('reg-password').value.trim();
+  if (!firstname || !username || !password) { showMsg('Please fill all fields.','error'); return; }
+  if (password.length < 4) { showMsg('Password must be at least 4 characters.','error'); return; }
+
+  setBtnLoading('reg-btn','reg-spinner','reg-btn-text', true);
+  try {
+    const res  = await fetch('/api/auth/register', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ firstname, lastname, username, password, role: selectedRole })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showMsg('Account created! Redirecting...','success');
+      setTimeout(() => window.location.href = '/', 1000);
+    } else {
+      showMsg(data.error || 'Registration failed.','error');
+      setBtnLoading('reg-btn','reg-spinner','reg-btn-text', false);
+    }
+  } catch(e) {
+    showMsg('Server error. Make sure python app.py is running.','error');
+    setBtnLoading('reg-btn','reg-spinner','reg-btn-text', false);
+  }
+}
+
+// ── Guest ──────────────────────────────────────────
+function guestLogin() {
+  fetch('/api/auth/guest', { method:'POST' })
+    .then(r => r.json())
+    .then(d => { if (d.success) window.location.href = '/'; })
+    .catch(() => window.location.href = '/');
+}
+
+// ── Enter key support ──────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const loginVisible = document.getElementById('form-login').style.display !== 'none';
+    if (loginVisible) doLogin(); else doRegister();
+  }
+});
+</script>
+</body>
+</html>

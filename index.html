@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InterviewAI — Performance Analyzer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<!-- ═══════════════ NAVBAR ═══════════════ -->
+<nav>
+  <div class="nav-logo">⚡ InterviewAI</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('home')">🏠 <span>Home</span></button>
+    <button class="nav-tab" onclick="showPage('audio')">🎙️ <span>Audio</span></button>
+    <button class="nav-tab" onclick="showPage('aptitude')">🧠 <span>Aptitude</span></button>
+    <button class="nav-tab" onclick="showPage('coding')">💻 <span>Coding</span></button>
+    <button class="nav-tab" onclick="showPage('video')">📹 <span>Video</span></button>
+    </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <span id="nav-user" style="font-size:13px;color:var(--text2);"></span>
+    <button class="btn btn-ghost" style="padding:8px 16px;font-size:13px;" onclick="doLogout()">🚪 Logout</button>
+  </div>
+</nav>
+
+<!-- ═══════════════ HOME PAGE ═══════════════ -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-badge">🤖 AI-Powered Interview Platform</div>
+    <h1>Analyze. Evaluate.<br/><span>Hire Smarter.</span></h1>
+    <p>Complete interview evaluation — audio analysis, aptitude tests, multi-language coding, and video recording.</p>
+    <div class="hero-cards">
+      <div class="hero-card" onclick="showPage('audio')">
+        <div class="icon">🎙️</div><h3>Audio Interview</h3><p>Speech-to-text + AI scoring</p>
+      </div>
+      <div class="hero-card" onclick="showPage('aptitude')">
+        <div class="icon">🧠</div><h3>Aptitude Test</h3><p>Quantitative & logical reasoning</p>
+      </div>
+      <div class="hero-card" onclick="showPage('coding')">
+        <div class="icon">💻</div><h3>Coding Test</h3><p>Python, Java, C, C++, JavaScript</p>
+      </div>
+      <div class="hero-card" onclick="showPage('video')">
+        <div class="icon">📹</div><h3>Video Interview</h3><p>Record for manual review</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:900px;margin:0 auto;">
+    <!-- Overall Score Panel -->
+    <div class="overall-panel" id="overall-panel">
+      <div class="overall-header">
+        <div class="overall-title">📊 Overall Performance</div>
+        <div class="overall-score" style="color:var(--text2);">--</div>
+        <div class="overall-grade">Complete modules to see your overall score</div>
+      </div>
+      <div class="overall-bars"></div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-title">📋 How It Works</div>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="how-num" style="background:rgba(59,130,246,.15);color:var(--accent);">1</div>
+          <div class="how-label">Upload Resume</div>
+          <div class="how-sub">PDF, DOCX or image</div>
+        </div>
+        <div class="how-step">
+          <div class="how-num" style="background:rgba(99,102,241,.15);color:var(--accent2);">2</div>
+          <div class="how-label">Take Tests</div>
+          <div class="how-sub">Audio, Aptitude, Coding, Video</div>
+        </div>
+        <div class="how-step">
+          <div class="how-num" style="background:rgba(16,185,129,.15);color:var(--accent3);">3</div>
+          <div class="how-label">AI Analyzes</div>
+          <div class="how-sub">Confidence, Communication, Technical</div>
+        </div>
+        <div class="how-step">
+          <div class="how-num" style="background:rgba(245,158,11,.15);color:var(--warn);">4</div>
+          <div class="how-label">Overall Report</div>
+          <div class="how-sub">Combined score + feedback</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ AUDIO PAGE ═══════════════ -->
+<div class="page" id="page-audio">
+  <div class="section-header">
+    <h2>🎙️ Audio Interview Analyzer</h2>
+    <p>Upload resume + audio or type transcript. AI evaluates confidence, communication and technical accuracy.</p>
+  </div>
+
+  <div class="steps" id="audio-steps">
+    <div class="step active" id="astep-1"><div class="step-circle">1</div><div class="step-label">Upload Files</div></div>
+    <div class="step-line"></div>
+    <div class="step" id="astep-2"><div class="step-circle">2</div><div class="step-label">Expected Answer</div></div>
+    <div class="step-line"></div>
+    <div class="step" id="astep-3"><div class="step-circle">3</div><div class="step-label">Transcript</div></div>
+    <div class="step-line"></div>
+    <div class="step" id="astep-4"><div class="step-circle">4</div><div class="step-label">View Scores</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="card">
+        <div class="card-title">📄 Upload Resume</div>
+        <div class="upload-zone" id="resume-zone" onclick="document.getElementById('resume-file').click()">
+          <input type="file" id="resume-file" accept=".pdf,.docx,.png,.jpg,.jpeg" onchange="handleResumeUpload(this)"/>
+          <div class="upload-icon">📄</div>
+          <h4>Click to upload resume</h4>
+          <p>Supports PDF, DOCX, PNG, JPG</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">🎙️ Upload Interview Audio</div>
+        <div class="upload-zone" id="audio-zone" onclick="document.getElementById('audio-file').click()">
+          <input type="file" id="audio-file" accept=".wav,.mp3,.m4a,.ogg,.flac" onchange="handleAudioUpload(this)"/>
+          <div class="upload-icon">🎙️</div>
+          <h4>Click to upload audio</h4>
+          <p>Supports WAV, MP3, M4A, OGG, FLAC</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📝 Expected / Ideal Answer</div>
+        <textarea id="expected-answer" placeholder="Type the expected answer here..." rows="5"></textarea>
+      </div>
+      <div class="card">
+        <div class="card-title">🗒️ Interview Transcript</div>
+        <p style="font-size:12px;color:var(--text3);margin-bottom:10px;">Type the candidate's spoken answer here manually.</p>
+        <textarea id="manual-transcript" placeholder="Type the candidate answer here..." rows="4"></textarea>
+      </div>
+      <button class="btn btn-primary btn-lg" style="width:100%;margin-top:16px;justify-content:center;" onclick="analyzeAudio()" id="analyze-btn">
+        🔍 Analyze Interview
+      </button>
+      <div class="status-bar" id="audio-status" style="display:none;"></div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-title">📊 Performance Scores</div>
+        <div class="score-grid">
+          <div class="score-item">
+            <div class="score-label">😊 Confidence</div>
+            <div class="score-ring">
+              <svg viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="45"/><circle class="fill conf" id="ring-conf" cx="50" cy="50" r="45"/></svg>
+              <div class="score-val" id="val-conf">0%</div>
+            </div>
+          </div>
+          <div class="score-item">
+            <div class="score-label">🗣️ Communication</div>
+            <div class="score-ring">
+              <svg viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="45"/><circle class="fill comm" id="ring-comm" cx="50" cy="50" r="45"/></svg>
+              <div class="score-val" id="val-comm">0%</div>
+            </div>
+          </div>
+          <div class="score-item">
+            <div class="score-label">💡 Technical</div>
+            <div class="score-ring">
+              <svg viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="45"/><circle class="fill tech" id="ring-tech" cx="50" cy="50" r="45"/></svg>
+              <div class="score-val" id="val-tech">0%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="result-banner" id="result-banner">
+        <div class="grade" id="result-grade">--</div>
+        <div class="overall" id="result-overall">Overall Performance: --</div>
+      </div>
+      <div class="card" id="feedback-section" style="display:none;">
+        <div class="card-title">📋 Detailed Feedback</div>
+        <div id="feedback-items"></div>
+      </div>
+      <div class="card" id="transcript-section" style="display:none;">
+        <div class="card-title">🗒️ Transcript</div>
+        <div class="transcript-box" id="transcript-display">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ APTITUDE PAGE ═══════════════ -->
+<div class="page" id="page-aptitude">
+  <div class="section-header">
+    <h2>🧠 Aptitude Test</h2>
+    <p>Quantitative reasoning, logical thinking — 5 randomized questions per attempt with live timer.</p>
+  </div>
+  <div class="grid-2" style="align-items:start;">
+    <div>
+      <div class="card">
+        <div class="card-title">👤 Candidate Details</div>
+        <label>Full Name</label>
+        <input type="text" id="apt-name" placeholder="Enter candidate name"/>
+        <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="btn btn-success" onclick="startAptitude()">▶️ Start Test</button>
+          <button class="btn btn-ghost" onclick="newAptitudeTest()">🔀 New Questions</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">⏱️ Timer</div>
+        <div class="timer-display" id="apt-timer">00:00</div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text2);">
+          <span>Answered: <strong id="apt-answered">0</strong> / 5</span>
+          <span id="apt-status-text" style="color:var(--text3);">Not started</span>
+        </div>
+      </div>
+      <div class="card" id="apt-result-card" style="display:none;">
+        <div class="card-title">🏆 Result</div>
+        <div style="text-align:center;padding:10px 0;">
+          <div style="font-family:var(--font-h);font-size:48px;font-weight:800;" id="apt-score-big">--</div>
+          <div style="color:var(--text2);margin-top:4px;" id="apt-grade-text">--</div>
+          <div style="margin-top:16px;" id="apt-result-details"></div>
+        </div>
+      </div>
+    </div>
+    <div id="apt-questions-container">
+      <div style="text-align:center;padding:60px 20px;color:var(--text3);">
+        <div style="font-size:48px;margin-bottom:16px;">🧠</div>
+        <p>Click "Start Test" to begin the aptitude assessment.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ CODING PAGE ═══════════════ -->
+<div class="page" id="page-coding">
+  <div class="section-header">
+    <h2>💻 Coding Test</h2>
+    <p>Write solutions in your preferred language. Auto-evaluated on logic, structure, and keyword usage.</p>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;flex-wrap:wrap;">
+    <input type="text" id="code-name" placeholder="Candidate name" style="width:220px;"/>
+    <button class="btn btn-ghost" onclick="newCodingQuestion()">🔀 New Question</button>
+    <span id="code-difficulty-badge" class="badge badge-blue">Easy</span>
+  </div>
+
+  <!-- Language Selector -->
+  <div style="margin-bottom:20px;">
+    <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;">🌐 Select Language:</div>
+    <div class="lang-selector" id="lang-selector"></div>
+  </div>
+
+  <div class="grid-2" style="align-items:start;">
+    <div>
+      <div class="card" style="background:#0d1117;border-color:#1e2d47;">
+        <div class="card-title" id="code-q-title">📌 Question</div>
+        <div id="code-q-desc" style="font-size:14px;line-height:1.8;color:var(--text2);white-space:pre-line;"></div>
+        <div style="margin-top:16px;padding:12px;background:rgba(245,158,11,.08);border-radius:8px;border:1px solid rgba(245,158,11,.2);">
+          <span style="font-size:12px;color:var(--warn);">💡 Hint: </span>
+          <span id="code-q-hint" style="font-size:12px;color:var(--text2);"></span>
+        </div>
+      </div>
+
+      <div class="card" id="code-result-card" style="display:none;">
+        <div class="card-title">📊 Result</div>
+        <div style="text-align:center;margin-bottom:16px;">
+          <div style="font-family:var(--font-h);font-size:42px;font-weight:800;" id="code-score-big">--</div>
+          <div id="code-grade-text" style="color:var(--text2);font-size:15px;margin-top:4px;"></div>
+        </div>
+        <div id="code-feedback-items"></div>
+        <div style="margin-top:16px;">
+          <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px;">✅ Sample Solution:</div>
+          <div class="code-editor" style="max-height:200px;overflow-y:auto;">
+            <div class="code-editor-bar">
+              <div class="code-dot" style="background:#ff5f57"></div>
+              <div class="code-dot" style="background:#febc2e"></div>
+              <div class="code-dot" style="background:#28c840"></div>
+              <span id="lang-badge" style="font-size:12px;color:var(--text3);margin-left:8px;">🐍 Python</span>
+            </div>
+            <pre id="code-sample-solution" style="padding:16px;color:#a5f3fc;font-size:13px;line-height:1.7;overflow-x:auto;margin:0;white-space:pre-wrap;"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="code-editor">
+        <div class="code-editor-bar">
+          <div class="code-dot" style="background:#ff5f57"></div>
+          <div class="code-dot" style="background:#febc2e"></div>
+          <div class="code-dot" style="background:#28c840"></div>
+          <span style="font-size:12px;color:var(--text3);margin-left:8px;">solution</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--text3);" id="editor-lang-label">Python 3</span>
+        </div>
+        <textarea id="code-editor-box" spellcheck="false"># Write your Python solution here
+
+def solution():
+    pass
+</textarea>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:16px;">
+        <button class="btn btn-primary btn-lg" style="flex:1;justify-content:center;" onclick="submitCode()">▶️ Submit Code</button>
+        <button class="btn btn-ghost" onclick="clearCode()">🗑️ Clear</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ VIDEO PAGE ═══════════════ -->
+<div class="page" id="page-video">
+  <div class="section-header">
+    <h2>📹 Video Interview Recorder</h2>
+    <p>Record interview sessions for manual HR review. Camera handled by Python — no browser permissions needed.</p>
+  </div>
+
+  <div class="card" style="background:rgba(59,130,246,.05);border-color:rgba(59,130,246,.2);margin-bottom:20px;">
+    <div style="display:flex;gap:14px;align-items:flex-start;">
+      <div style="font-size:24px;">ℹ️</div>
+      <div>
+        <div style="font-weight:600;margin-bottom:6px;">About This Feature</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7;">
+          Camera is handled by <strong>Python OpenCV</strong> — no browser permissions needed.
+          It does <strong>not</strong> use AI to analyze video responses — the interviewer evaluates manually.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="align-items:start;">
+    <div>
+      <div class="card">
+        <div class="card-title">👤 Session Details</div>
+        <label>Candidate Name</label>
+        <input type="text" id="video-name" placeholder="Enter candidate name" style="margin-bottom:12px;"/>
+        <label>Interview Topic / Position</label>
+        <input type="text" id="video-topic" placeholder="e.g. Software Engineer - Round 1"/>
+      </div>
+      <div class="card">
+        <div class="card-title">📋 Interview Questions</div>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">Ask these questions during recording:</p>
+        <div class="video-q-list">
+          <div class="video-q" style="border-color:var(--accent);">1. Tell me about yourself and your background.</div>
+          <div class="video-q" style="border-color:var(--accent2);">2. What are your key technical skills?</div>
+          <div class="video-q" style="border-color:var(--accent3);">3. Describe a challenging project you've worked on.</div>
+          <div class="video-q" style="border-color:var(--warn);">4. Where do you see yourself in 5 years?</div>
+          <div class="video-q" style="border-color:var(--danger);">5. Do you have any questions for us?</div>
+        </div>
+      </div>
+      <div class="card" id="video-saved-card" style="display:none;">
+        <div class="card-title">💾 Recording Saved</div>
+        <div id="video-saved-info" style="font-size:13px;color:var(--text2);line-height:1.8;"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-title">🎥 Camera Preview</div>
+        <div class="video-preview" id="video-preview">
+          <img id="camera-stream" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;"/>
+          <div class="rec-badge" id="rec-badge"><div class="rec-dot"></div> REC <span id="rec-timer">00:00</span></div>
+          <div class="video-overlay" id="video-overlay">
+            <div style="font-size:48px;margin-bottom:12px;">📹</div>
+            <div style="font-size:14px;">Camera not started</div>
+            <div style="font-size:12px;color:var(--text3);margin-top:6px;">Click "Start Camera" to preview</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn btn-ghost" onclick="startCamera()" id="btn-start-cam">📷 Start Camera</button>
+          <button class="btn btn-danger" onclick="startRecording()" id="btn-start-rec" disabled>🔴 Start Recording</button>
+          <button class="btn btn-ghost" onclick="stopRecording()" id="btn-stop-rec" disabled>⏹ Stop</button>
+          <button class="btn btn-ghost" onclick="stopCamera()" id="btn-stop-cam">🛑 Stop Camera</button>
+          <button class="btn btn-ghost" onclick="downloadRecording()" id="btn-download" disabled style="background:rgba(16,185,129,.1);border-color:var(--accent3);color:var(--accent3);">⬇️ Download</button>
+        </div>
+        <div class="status-bar" id="video-status" style="margin-top:12px;">📹 Click "Start Camera" to begin.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">📝 Interviewer Notes</div>
+        <textarea id="video-notes" placeholder="Add notes about the candidate's performance for HR review..." rows="5"></textarea>
+        <button class="btn btn-ghost" style="margin-top:12px;" onclick="saveNotes()">💾 Save Notes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="js/data.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/aptitude.js"></script>
+<script src="js/coding.js"></script>
+<script src="js/video.js"></script>
+<script src="js/main.js"></script>
+<script>
+function doLogout() {
+  fetch('/api/auth/logout', { method: 'POST' })
+    .then(() => window.location.href = '/login')
+    .catch(() => window.location.href = '/login');
+}
+</script>
+</body>
+</html>
